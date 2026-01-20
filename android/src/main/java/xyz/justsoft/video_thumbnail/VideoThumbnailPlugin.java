@@ -224,8 +224,22 @@ public class VideoThumbnailPlugin implements FlutterPlugin, MethodCallHandler {
                     // API Level 27
                     bitmap = retriever.getScaledFrameAtTime(timeMs * 1000, MediaMetadataRetriever.OPTION_CLOSEST,
                             targetW, targetH);
+                    if (bitmap == null) {
+                        bitmap = retriever.getScaledFrameAtTime(
+                                timeMs * 1000,
+                                MediaMetadataRetriever.OPTION_CLOSEST_SYNC,
+                                targetW,
+                                targetH
+                        );
+                    }
                 } else {
                     bitmap = retriever.getFrameAtTime(timeMs * 1000, MediaMetadataRetriever.OPTION_CLOSEST);
+                    if (bitmap == null) {
+                        bitmap = retriever.getFrameAtTime(
+                                timeMs * 1000L,
+                                MediaMetadataRetriever.OPTION_CLOSEST_SYNC
+                        );
+                    }
                     if (bitmap != null) {
                         int width = bitmap.getWidth();
                         int height = bitmap.getHeight();
@@ -241,6 +255,12 @@ public class VideoThumbnailPlugin implements FlutterPlugin, MethodCallHandler {
                 }
             } else {
                 bitmap = retriever.getFrameAtTime(timeMs * 1000, MediaMetadataRetriever.OPTION_CLOSEST);
+                if (bitmap == null) {
+                    bitmap = retriever.getFrameAtTime(
+                            timeMs * 1000L,
+                            MediaMetadataRetriever.OPTION_CLOSEST_SYNC
+                    )
+                }
             }
         } catch (IllegalArgumentException ex) {
             ex.printStackTrace();
